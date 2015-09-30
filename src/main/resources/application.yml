@@ -1,6 +1,6 @@
 ---
 spring:
-  profiles:
+  profiles: development
 multipart:
-  maxFileSize: 1MB
-  maxRequestSize: 1MB
+  maxFileSize: 800MB
+  maxRequestSize: 800MB
