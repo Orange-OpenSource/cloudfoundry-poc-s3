@@ -63,7 +63,6 @@ public class PocRiakcsController {
     public String show(@PathVariable String fileName) throws IOException {
         BlobStore blobStore = blobStoreContext.getBlobStore();
         Blob blob = blobStore.getBlob(this.bucketName, fileName);
-        System.out.println(fileName);
         InputStream inputStream = blob.getPayload().openStream();
 
         String content = "";
