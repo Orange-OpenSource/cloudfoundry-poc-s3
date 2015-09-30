@@ -5,7 +5,12 @@ import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.blobstore.domain.Blob;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -76,4 +81,21 @@ public class PocRiakcsController {
         return content;
     }
 
+    @RequestMapping(value = "/download/{fileName:.*}", method = RequestMethod.GET)
+    public ResponseEntity<InputStreamResource> download(@PathVariable String fileName)
+            throws IOException {
+        BlobStore blobStore = blobStoreContext.getBlobStore();
+        Blob blob = blobStore.getBlob(this.bucketName, fileName);
+
+        HttpHeaders respHeaders = new HttpHeaders();
+
+        respHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        respHeaders.setContentLength(blob.getPayload().getContentMetadata().getContentLength());
+        respHeaders.setContentDispositionFormData("attachment", fileName);
+
+        InputStream inputStream = blob.getPayload().openStream();
+
+        InputStreamResource isr = new InputStreamResource(inputStream);
+        return new ResponseEntity<>(isr, respHeaders, HttpStatus.OK);
+    }
 }
