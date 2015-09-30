@@ -1,0 +1,6 @@
+---
+spring:
+  profiles:
+multipart:
+  maxFileSize: 1MB
+  maxRequestSize: 1MB
