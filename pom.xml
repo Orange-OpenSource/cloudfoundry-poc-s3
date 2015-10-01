@@ -4,12 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.orange.clara.cloud</groupId>
-    <artifactId>poc-riak</artifactId>
+    <artifactId>cloudfoundry-poc-s3</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <name>demo</name>
-    <description>PoC to show riakcs connector</description>
+    <description>PoC to show how to use s3 connector inside cloud foundry</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -47,6 +47,11 @@
             <groupId>com.github.Orange-OpenSource</groupId>
             <artifactId>cloudfoundry-s3-service-connector</artifactId>
             <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>18.0</version>
         </dependency>
     </dependencies>
 

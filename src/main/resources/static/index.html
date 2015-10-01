@@ -1,7 +1,20 @@
 <html>
 <body>
+<h1>Normal upload</h1>
+
 <form method="POST" enctype="multipart/form-data"
       action="/upload">
+    File to upload: <input type="file" name="file">
+    <br/>
+    Name: <input type="text" name="name">
+    <br/> <br/>
+    <input type="submit" value="Upload"> Press here to upload the file!
+</form>
+<hr/>
+<h1>Upload in stream</h1>
+
+<form method="POST" enctype="multipart/form-data"
+      action="/uploadInStream">
     File to upload: <input type="file" name="file">
     <br/>
     Name: <input type="text" name="name">

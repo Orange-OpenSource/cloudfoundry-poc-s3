@@ -1,4 +1,4 @@
-package com.orange.clara.cloud.config;
+package com.orange.clara.cloud.poc.s3.config;
 
 import com.orange.cloudfoundry.connector.s3.factory.S3ContextBuilder;
 import org.jclouds.blobstore.BlobStoreContext;

@@ -1,3 +1,4 @@
 /target
 *.iml
 /deploy
+/orange-manifest.yml

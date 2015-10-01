@@ -1,9 +1,0 @@
----
-inherit: manifest.yml
-name: poc-riakcs
-#domain: cf.ns.router.poc.elpaaso.rd.francetelecom.fr
-env:
-  http_proxy: http://10.203.6.6:3128
-  https_proxy: http://10.203.6.6:3128
-services:
-- riak-poc-riakcs

@@ -1,5 +1,6 @@
-package com.orange.clara.cloud.controller;
+package com.orange.clara.cloud.poc.s3.controller;
 
+import com.orange.clara.cloud.poc.s3.upload.UploadS3Stream;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.blobstore.domain.Blob;
@@ -30,7 +31,7 @@ import java.io.InputStreamReader;
  * Date: 30/09/2015
  */
 @RestController
-public class PocRiakcsController {
+public class PocS3Controller {
 
     @Autowired
     private ResourceLoader resourceLoader;
@@ -43,6 +44,9 @@ public class PocRiakcsController {
     @Qualifier(value = "bucketName")
     private String bucketName;
 
+    @Autowired
+    private UploadS3Stream uploadS3Stream;
+
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public
     @ResponseBody
@@ -53,7 +57,6 @@ public class PocRiakcsController {
         }
 
         byte[] bytes = multipartFile.getBytes();
-
         BlobStore blobStore = blobStoreContext.getBlobStore();
         Blob blob = blobStore.blobBuilder(name)
                 .payload(bytes)
@@ -97,5 +100,22 @@ public class PocRiakcsController {
 
         InputStreamResource isr = new InputStreamResource(inputStream);
         return new ResponseEntity<>(isr, respHeaders, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/uploadInStream", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    String uploadInStream(@RequestParam("name") String name,
+                          @RequestParam("file") MultipartFile multipartFile) throws IOException {
+        if (multipartFile.isEmpty()) {
+            return "You failed to upload " + name + " because the file was empty.";
+        }
+
+        InputStream multipartFileStream = multipartFile.getInputStream();
+        BlobStore blobStore = blobStoreContext.getBlobStore();
+        Blob blob = blobStore.blobBuilder(name).build();
+        this.uploadS3Stream.upload(multipartFileStream, blob);
+
+        return "We uploaded the file '" + name + "' to a riakcs!";
     }
 }
