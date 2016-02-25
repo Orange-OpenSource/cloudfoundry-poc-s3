@@ -18,7 +18,7 @@ Multiples scenarios
 
 You have two scenarios inside this poc, those scenarios wants to show in the code what you can do to upload on a S3 storage:
 
- 1. You just want to send a file with a known size, just use the `Normal upload` and see [https://github.com/Orange-OpenSource/s3-connectors-poc/blob/master/src/main/java/com/orange/clara/cloud/poc/s3/controller/PocS3Controller.java#L55-70](https://github.com/Orange-OpenSource/s3-connectors-poc/blob/master/src/main/java/com/orange/clara/cloud/poc/s3/controller/PocS3Controller.java#L55-70) in the code.
+ 1. You just want to send a file with a known size, just use the `Normal upload` and see [https://github.com/Orange-OpenSource/s3-connectors-poc/blob/master/src/main/java/com/orange/clara/cloud/poc/s3/controller/PocS3Controller.java#L55-L70](https://github.com/Orange-OpenSource/s3-connectors-poc/blob/master/src/main/java/com/orange/clara/cloud/poc/s3/controller/PocS3Controller.java#L55-L70) in the code.
  2. You want to send a file with a unknown size, for example when you pipe to another process and you don't want to store data in a file, you just want to directly send the file to s3 storage, use the `Upload in stream`. Note that if you send a large file this method will be slightly faster.(you can see [https://github.com/Orange-OpenSource/s3-connectors-poc/blob/master/src/main/java/com/orange/clara/cloud/poc/s3/controller/PocS3Controller.java#L107-L120](https://github.com/Orange-OpenSource/s3-connectors-poc/blob/master/src/main/java/com/orange/clara/cloud/poc/s3/controller/PocS3Controller.java#L107-L120) in the code)
 
 Deploy It !
