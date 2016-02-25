@@ -50,4 +50,4 @@ Deploy It !
 
 You can use the local config connector to do this simply modify value `spring.cloud.mys3` in the file `config/spring-cloud.properties`.
 
-Take a look on [https://github.com/Orange-OpenSource/s3-connectors-poc/blob/master/src/main/java/resources/spring-cloud-bootstrap.properties](https://github.com/Orange-OpenSource/s3-connectors-poc/blob/master/src/main/java/resources/spring-cloud-bootstrap.properties) to know how to set the property file location.
+Take a look on [https://github.com/Orange-OpenSource/s3-connectors-poc/blob/master/src/main/resources/spring-cloud-bootstrap.properties](https://github.com/Orange-OpenSource/s3-connectors-poc/blob/master/src/main/resources/spring-cloud-bootstrap.properties) to know how to set the property file location.
