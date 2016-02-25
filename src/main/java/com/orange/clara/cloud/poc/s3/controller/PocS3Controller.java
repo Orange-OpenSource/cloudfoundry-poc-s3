@@ -1,8 +1,7 @@
 package com.orange.clara.cloud.poc.s3.controller;
 
 import com.orange.clara.cloud.poc.s3.upload.UploadS3Stream;
-import org.jclouds.blobstore.BlobStore;
-import org.jclouds.blobstore.BlobStoreContext;
+import com.orange.spring.cloud.connector.s3.core.jcloudswrappers.SpringCloudBlobStore;
 import org.jclouds.blobstore.domain.Blob;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,6 +11,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,47 +31,49 @@ import java.io.InputStreamReader;
  * Author: Arthur Halet
  * Date: 30/09/2015
  */
-@RestController
+@Controller
 public class PocS3Controller {
 
     @Autowired
     private ResourceLoader resourceLoader;
 
     @Autowired
-    @Qualifier(value = "blobStoreContext")
-    private BlobStoreContext blobStoreContext;
+    @Qualifier("blobStore")
+    private SpringCloudBlobStore blobStore;
 
-    @Autowired
-    @Qualifier(value = "bucketName")
-    private String bucketName;
 
     @Autowired
     private UploadS3Stream uploadS3Stream;
 
+    @RequestMapping("/")
+    public String list(Model model) {
+
+        model.addAttribute("files", blobStore.list());
+        return "index";
+    }
+
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public
-    @ResponseBody
-    String upload(@RequestParam("name") String name,
-                  @RequestParam("file") MultipartFile multipartFile) throws IOException {
+    public String upload(@RequestParam("name") String name,
+                         @RequestParam("file") MultipartFile multipartFile, Model model) throws IOException {
         if (multipartFile.isEmpty()) {
             return "You failed to upload " + name + " because the file was empty.";
         }
 
         byte[] bytes = multipartFile.getBytes();
-        BlobStore blobStore = blobStoreContext.getBlobStore();
-        Blob blob = blobStore.blobBuilder(name)
+        Blob blob = this.blobStore.blobBuilder(name)
                 .payload(bytes)
                 .build();
 
-        blobStore.putBlob(this.bucketName, blob);
-
-        return "We uploaded the file '" + name + "' to a riakcs!";
+        blobStore.putBlob(blob);
+        model.addAttribute("message", "We uploaded the file '" + name + "' to a riakcs");
+        return "success";
     }
 
     @RequestMapping("/show/{fileName:.*}")
-    public String show(@PathVariable String fileName) throws IOException {
-        BlobStore blobStore = blobStoreContext.getBlobStore();
-        Blob blob = blobStore.getBlob(this.bucketName, fileName);
+    public
+    @ResponseBody
+    String show(@PathVariable String fileName) throws IOException {
+        Blob blob = blobStore.getBlob(fileName);
         InputStream inputStream = blob.getPayload().openStream();
 
         String content = "";
@@ -87,8 +90,7 @@ public class PocS3Controller {
     @RequestMapping(value = "/download/{fileName:.*}", method = RequestMethod.GET)
     public ResponseEntity<InputStreamResource> download(@PathVariable String fileName)
             throws IOException {
-        BlobStore blobStore = blobStoreContext.getBlobStore();
-        Blob blob = blobStore.getBlob(this.bucketName, fileName);
+        Blob blob = this.blobStore.getBlob(fileName);
 
         HttpHeaders respHeaders = new HttpHeaders();
 
@@ -103,19 +105,17 @@ public class PocS3Controller {
     }
 
     @RequestMapping(value = "/uploadInStream", method = RequestMethod.POST)
-    public
-    @ResponseBody
-    String uploadInStream(@RequestParam("name") String name,
-                          @RequestParam("file") MultipartFile multipartFile) throws IOException {
+    public String uploadInStream(@RequestParam("name") String name,
+                                 @RequestParam("file") MultipartFile multipartFile, Model model) throws IOException {
         if (multipartFile.isEmpty()) {
             return "You failed to upload " + name + " because the file was empty.";
         }
 
         InputStream multipartFileStream = multipartFile.getInputStream();
-        BlobStore blobStore = blobStoreContext.getBlobStore();
-        Blob blob = blobStore.blobBuilder(name).build();
+        Blob blob = this.blobStore.blobBuilder(name).build();
         this.uploadS3Stream.upload(multipartFileStream, blob);
 
-        return "We uploaded the file '" + name + "' to a riakcs!";
+        model.addAttribute("message", "We uploaded the file '" + name + "' to a riakcs");
+        return "success";
     }
 }

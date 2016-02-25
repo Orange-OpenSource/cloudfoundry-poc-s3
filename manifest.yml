@@ -3,7 +3,7 @@
 name: poc-riakcs
 memory: 1G
 instances: 1
-path: ./target/cloudfoundry-poc-s3-0.0.1-SNAPSHOT.war
+path: ./target/cloudfoundry-poc-s3-2.0.12-SNAPSHOT.war
 host: poc-riakcs
 env:
   spring_profiles_active: development,cloud

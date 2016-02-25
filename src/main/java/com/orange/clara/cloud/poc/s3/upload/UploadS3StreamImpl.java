@@ -3,7 +3,7 @@ package com.orange.clara.cloud.poc.s3.upload;
 import com.google.common.collect.Maps;
 import com.google.common.io.ByteStreams;
 import com.google.common.net.MediaType;
-import org.jclouds.blobstore.BlobStoreContext;
+import com.orange.spring.cloud.connector.s3.core.jcloudswrappers.SpringCloudBlobStoreContext;
 import org.jclouds.blobstore.KeyNotFoundException;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.io.ContentMetadata;
@@ -36,11 +36,8 @@ public class UploadS3StreamImpl implements UploadS3Stream {
 
     @Autowired
     @Qualifier(value = "blobStoreContext")
-    protected BlobStoreContext blobStoreContext;
+    protected SpringCloudBlobStoreContext blobStoreContext;
 
-    @Autowired
-    @Qualifier(value = "bucketName")
-    protected String bucketName;
 
     protected S3Client s3Client;
 
@@ -51,6 +48,7 @@ public class UploadS3StreamImpl implements UploadS3Stream {
 
     @Override
     public String upload(InputStream content, Blob blob) throws IOException {
+        String bucketName = this.blobStoreContext.getSpringCloudBlobStore().getBucketName();
         String key = blob.getMetadata().getName();
         ContentMetadata metadata = blob.getMetadata().getContentMetadata();
         ObjectMetadataBuilder builder = ObjectMetadataBuilder.create().key(key)

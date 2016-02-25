@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<h1>Normal upload</h1>
+
+<form method="POST" enctype="multipart/form-data"
+      action="/upload">
+    File to upload: <input type="file" name="file"/>
+    <br/>
+    Name: <input type="text" name="name"/>
+    <br/> <br/>
+    <input type="submit" value="Upload"/> Press here to upload the file!
+</form>
+<hr/>
+<h1>Upload in stream</h1>
+
+<form method="POST" enctype="multipart/form-data"
+      action="/uploadInStream">
+    File to upload: <input type="file" name="file"/>
+    <br/>
+    Name: <input type="text" name="name"/>
+    <br/> <br/>
+    <input type="submit" value="Upload"/> Press here to upload the file!
+</form>
+
+<hr/>
+<h1>Files list</h1>
+<div th:if="${files != null and files.isEmpty() == false}">
+    <ul>
+        <li th:each="file : ${files}">
+            <span th:text="${file.name}"></span> - <a th:href="@{/show/{filename}(filename=${file.name})}">Show</a> - <a
+                th:href="@{/download/{filename}(filename=${file.name})}">Download</a>
+        </li>
+    </ul>
+</div>
+</body>
+</html>
